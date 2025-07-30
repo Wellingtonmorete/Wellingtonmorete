@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0f172a" />
+    <link rel="manifest" href="/manifest.json" />
+    <title>Orçamentos para Sites em PHP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+      import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_AUTH_DOMAIN",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_STORAGE_BUCKET",
+        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+        appId: "YOUR_APP_ID",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      const form = document.getElementById("leadForm");
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const nome = form.nome.value;
+        const email = form.email.value;
+        const mensagem = form.mensagem.value;
+
+        try {
+          await addDoc(collection(db, "leads"), {
+            nome,
+            email,
+            mensagem,
+            data: serverTimestamp(),
+          });
+          alert("Solicitação enviada com sucesso!");
+          form.reset();
+        } catch (err) {
+          alert("Erro ao enviar: " + err);
+        }
+      });
+    </script>
+  </head>
+  <body class="bg-slate-900 text-white font-sans">
+    <main class="min-h-screen flex flex-col items-center justify-start p-4">
+      <section class="max-w-4xl w-full text-center mb-10">
+        <h1 class="text-4xl font-bold mb-4">Manutenção Especializada em Sites PHP Antigos</h1>
+        <p class="text-gray-300 mb-6 text-lg">
+          Você tem um sistema antigo feito em PHP que precisa de atenção? Eu sou programador com experiência em sites legados e posso modernizar, corrigir bugs e melhorar a performance do seu sistema.
+        </p>
+      </section>
+
+      <section class="grid md:grid-cols-2 gap-6 max-w-6xl w-full mb-10">
+        <div class="bg-slate-800 rounded-xl p-4 flex flex-col items-center">
+          <img src="/img/php-legacy.png" alt="PHP Antigo" class="rounded-lg mb-4 w-full h-auto max-h-64 object-contain" />
+          <h2 class="text-xl font-semibold mb-2">Correção de erros e lentidão</h2>
+          <p class="text-gray-400">Resolvo problemas frequentes de lentidão e erros comuns em versões antigas do PHP.</p>
+        </div>
+        <div class="bg-slate-800 rounded-xl p-4 flex flex-col items-center">
+          <img src="/img/upgrades.png" alt="Atualizações" class="rounded-lg mb-4 w-full h-auto max-h-64 object-contain" />
+          <h2 class="text-xl font-semibold mb-2">Atualizações e melhorias</h2>
+          <p class="text-gray-400">Posso atualizar seu sistema sem quebrar as funcionalidades existentes.</p>
+        </div>
+      </section>
+
+      <section class="w-full max-w-xl bg-slate-800 p-6 rounded-2xl shadow-xl mt-auto">
+        <h2 class="text-2xl font-bold mb-4 text-center">Solicite um orçamento gratuito</h2>
+        <form id="leadForm" class="space-y-4">
+          <input name="nome" type="text" required placeholder="Seu nome" class="w-full p-3 rounded bg-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <input name="email" type="email" required placeholder="Seu e-mail" class="w-full p-3 rounded bg-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <textarea name="mensagem" required placeholder="Descreva o problema ou necessidade" class="w-full p-3 h-28 rounded bg-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+          <button type="submit" class="w-full p-3 rounded bg-blue-600 hover:bg-blue-700 transition">Solicitar orçamento</button>
+        </form>
+      </section>
+    </main>
+
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw.js");
+      }
+    </script>
+  </body>
+</html>
